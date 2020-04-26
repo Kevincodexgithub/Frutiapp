@@ -3,6 +3,8 @@ package com.example.frutiapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -50,6 +52,23 @@ public class MainActivity extends AppCompatActivity {
         }else if(num_aleatorio == 4 || num_aleatorio == 5 || num_aleatorio == 6){
             id = getResources().getIdentifier("uva","drawable",getPackageName());
             iv_personaje.setImageResource(id);
+        }
+        //conexion a la base de datos sqlite
+        AdminSqliteOpenHelper admin = new AdminSqliteOpenHelper(this,"BD",null,1);
+        //Iniciar la apertura y escritura de la base de datos
+        SQLiteDatabase BD = admin.getWritableDatabase();
+
+        Cursor consulta = BD.rawQuery(
+                "select * from puntaje where score = (select max(score) from puntaje)",null
+        );
+        //verifica si existe algun valor en la base de datos
+        if(consulta.moveToFirst()){
+            String temp_nombre = consulta.getString(0);
+            String temp_score = consulta.getString(1);
+            tv_BestScore.setText("Record: " + temp_score + " de " + temp_nombre);
+            BD.close();
+        }else{
+            BD.close();
         }
 
         //Inciar el audio de la aplicacion
