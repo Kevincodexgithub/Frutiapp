@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(!nombre.equals("")){
             mp.stop();
-            //permite destruir el objeto de la classe mp, para ahorrar recursos
+            //permite destruir el objeto de la clase mp, para ahorrar recursos
             mp.release();
             //ir de un activity a  otro
             Intent intent = new Intent(this,Main2Activity_Nivel1.class);
