@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,7 +31,7 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         Toast.makeText(this, "Nivel 1 - Sumas Básicas", Toast.LENGTH_LONG).show();
 
         tv_nombre = (TextView)findViewById(R.id.textView_nombre);
-        tv_score = (TextView)findViewById(R.id.textView_BestScore);
+        tv_score = (TextView)findViewById(R.id.textView_score);
         iv_vidas = (ImageView)findViewById(R.id.imageView_vidas);
         iv_Auno = (ImageView)findViewById(R.id.imageView_NumUno);
         iv_Ados = (ImageView)findViewById(R.id.imageView_NumDos);
@@ -51,6 +52,48 @@ public class Main2Activity_Nivel1 extends AppCompatActivity {
         mp_bad = MediaPlayer.create(this,R.raw.bad);
 
         NumAleatorio();
+    }
+
+    public void Comparar(View view){
+        String respuesta = et_respuestas.getText().toString();
+
+        if(!respuesta.equals("")){
+            int respuesta_jugador = Integer.parseInt(respuesta);
+            if(resultado == respuesta_jugador){
+                mp_great.start();
+                score++;
+                tv_score.setText("Score: " + score);
+                et_respuestas.setText("");
+            }else{
+                mp_bad.start();
+                vidas--;
+                switch (vidas){
+                    case 3:
+                        iv_vidas.setImageResource(R.drawable.tresvidas);
+                        break;
+                    case 2:
+                        Toast.makeText(this, "Te queda dos manzanas", Toast.LENGTH_SHORT).show();
+                        iv_vidas.setImageResource(R.drawable.dosvidas);
+                        break;
+                    case 1:
+                        Toast.makeText(this, "Te queda una manzana ", Toast.LENGTH_SHORT).show();
+                        iv_vidas.setImageResource(R.drawable.unavida);
+                        break;
+                    case 0:
+                        Toast.makeText(this, "Has perdido todas tus manzanas", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this,MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                        mp.stop();
+                        mp.release();
+                        break;
+                }
+                et_respuestas.setText("");
+            }
+            NumAleatorio();
+        }else{
+            Toast.makeText(this, "Escribe una respuesta", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void NumAleatorio(){
